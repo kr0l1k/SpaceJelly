@@ -40,7 +40,6 @@ public class BoardController : MonoBehaviour
 
     private void CreateBoard(float xOffset, float yOffset)
     {
-
         MoveCreator();
 
         tiles = new GameObject[xSize, ySize];
@@ -61,6 +60,7 @@ public class BoardController : MonoBehaviour
                 List<Sprite> possibleCharacters = new List<Sprite>();
                 possibleCharacters.AddRange(characters);
 
+                
                 possibleCharacters.Remove(previousLeft[y]);
                 possibleCharacters.Remove(previousBelow);
                 Sprite newSprite = possibleCharacters[Random.Range(0, possibleCharacters.Count)];
@@ -74,9 +74,11 @@ public class BoardController : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// validate input fields
+    /// </summary>
     private void ValidateFieldSize()
     {
-
 
         int.TryParse(xSizeText.text, out xSize);
         if (xSize < 5 || xSize >= 10)
@@ -93,12 +95,18 @@ public class BoardController : MonoBehaviour
         }
 
     }
-
+    /// <summary>
+    /// move game board to center of screen
+    /// </summary>
     private void MoveCreator()
     {
         transform.position = new Vector3(-xSize / 2 * offset.x, -ySize / 2 * offset.y);
     }
 
+    /// <summary>
+    /// find null on the board and start shiftDown
+    /// </summary>
+    /// <returns></returns>
     public IEnumerator FindNullTiles()
     {
         for (int x = 0; x < xSize; x++)
@@ -113,7 +121,13 @@ public class BoardController : MonoBehaviour
             }
         }
     }
-
+    /// <summary>
+    /// shift down the sprite and create a new one in empty space
+    /// </summary>
+    /// <param name="x"></param>
+    /// <param name="yStart"></param>
+    /// <param name="shiftDelay"></param>
+    /// <returns></returns>
     private IEnumerator ShiftTilesDown(int x, int yStart, float shiftDelay = .03f)
     {
         IsShifting = true;
@@ -142,6 +156,12 @@ public class BoardController : MonoBehaviour
         IsShifting = false;
     }
 
+    /// <summary>
+    /// check posible variants of sprite
+    /// </summary>
+    /// <param name="x"></param>
+    /// <param name="y"></param>
+    /// <returns></returns>
     private Sprite GetNewSprite(int x, int y)
     {
         List<Sprite> possibleCharacters = new List<Sprite>();
@@ -163,6 +183,10 @@ public class BoardController : MonoBehaviour
         return possibleCharacters[Random.Range(0, possibleCharacters.Count)];
     }
 
+    /// <summary>
+    /// check matches on board
+    /// </summary>
+    /// <returns></returns>
     public IEnumerator FindMatchesOnBoard()
     {
         foreach (var gameObject in tiles)

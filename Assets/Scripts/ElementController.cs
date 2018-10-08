@@ -66,6 +66,7 @@ public class ElementController : MonoBehaviour
             }
             else
             {
+                //swap sprites only if rhem adjoined
                 if (GetAllAdjoinedTiles().Contains(previousSelected.gameObject))
                 {
                     cleared = false;
@@ -74,9 +75,11 @@ public class ElementController : MonoBehaviour
                     previousSelected.Deselect();
                     ClearAllMatches();
 
+                    //find all matches on board
                     StopCoroutine(BoardController.instance.FindMatchesOnBoard());
                     StartCoroutine(BoardController.instance.FindMatchesOnBoard());
 
+                    //cancel swap if matching isn't found
                     if(!cleared)
                     {
                         SwapSprite(previousSelectedTemp.GetComponent<SpriteRenderer>());
@@ -105,6 +108,11 @@ public class ElementController : MonoBehaviour
         render2.sprite = render.sprite;
         render.sprite = tempSprite;
     }
+    /// <summary>
+    /// Get nearest element
+    /// </summary>
+    /// <param name="castDir"></param>
+    /// <returns></returns>
     private GameObject GetAdjoined(Vector2 castDir)
     {
         RaycastHit2D hit = Physics2D.Raycast(transform.position, castDir);
@@ -115,6 +123,10 @@ public class ElementController : MonoBehaviour
         return null;
     }
 
+    /// <summary>
+    /// get collection of nearest elements
+    /// </summary>
+    /// <returns></returns>
     private List<GameObject> GetAllAdjoinedTiles()
     {
         List<GameObject> adjoinedTiles = new List<GameObject>();
@@ -166,8 +178,11 @@ public class ElementController : MonoBehaviour
 
             render.sprite = null;
             matchFound = false;
+
+            //fill board with new elements
             StopCoroutine(BoardController.instance.FindNullTiles());
             StartCoroutine(BoardController.instance.FindNullTiles());
+
             cleared = true;
         }
     }
